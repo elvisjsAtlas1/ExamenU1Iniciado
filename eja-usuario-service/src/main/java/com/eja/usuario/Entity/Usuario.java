@@ -1,4 +1,4 @@
-package com.eja.libro.Entity;
+package com.eja.usuario.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "libro")
-public class Libro {
+@Table(name = "usuario")
+
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String titulo;
-    private String autor;
-    private String editorial;
-    private Integer copiasDisponibles;
-    private String categoria;
-    private String isbn;
+    private String nombre;
+    private String tipo;
+    private String estado;
+    private String carrera;
+    private String correo;
 }

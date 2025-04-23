@@ -1,0 +1,29 @@
+server:
+  port: 8085
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8090/eureka
+  instance:
+    hostname: localhost
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: eja-libro-service
+          uri: lb://eja-libro-service
+          predicates:
+            - Path=/libro/**
+        - id: eja-usuario-service
+          uri: lb://eja-usuario-service
+          predicates:
+            - Path=/usuario/**
+        - id: eja-prestamo-service
+          uri: lb://eja-prestamo-service
+          predicates:
+            - Path=/prestamo/**

@@ -1,4 +1,4 @@
-package com.eja.libro.Configuration;
+package com.eja.usuario.Configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -11,9 +11,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
-                .title("OPEN API MICROSERVICIO DE LIBRO")
+                .title("OPEN API MICROSERVICIO DE USUARIO")
                 .version("0.0.1")
-                .description("Servicios web Libros")
+                .description("Servicios web Usuarios")
                 .termsOfService("http://swagger.io/terms")
                 .license(new License().name("Apache 2.0").url("http://springdoc.org"))
         );
