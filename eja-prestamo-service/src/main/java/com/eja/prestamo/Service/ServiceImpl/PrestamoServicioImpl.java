@@ -64,23 +64,38 @@ public class PrestamoServicioImpl implements PrestamoServicio {
             throw new IllegalStateException("El usuario no está activo y no puede registrar un préstamo.");
         }
 
-        // Obtener libro y verificar copias disponibles (si no lo tienes ya)
+        // Obtener libro y verificar copias disponibles
         LibroDto libro = libroFeign.buscarLibro(prestamo.getLibroId()).getBody();
         if (libro == null) {
             throw new IllegalArgumentException("El libro no existe.");
         }
 
+        // Verificar si el libro tiene copias disponibles
         if (libro.getCopiasDisponibles() <= 0) {
             throw new IllegalStateException("No hay copias disponibles para el libro solicitado.");
         }
 
+        // Verificar la cantidad de préstamos actuales para este libro
+        long prestamosExistentes = prestamoRepositorio.countByLibroId(prestamo.getLibroId());
+        if (prestamosExistentes >= 5) {
+            throw new IllegalStateException("El libro ha alcanzado el límite de préstamos.");
+        }
+
         // Si pasa todas las validaciones, guardar el préstamo
         Prestamo prestamoGuardado = prestamoRepositorio.save(prestamo);
+
+        // Decrementar las copias disponibles después de crear el préstamo
+        libro.setCopiasDisponibles(libro.getCopiasDisponibles() - 1);
+
+        // Actualizar la cantidad de copias disponibles del libro
+        libroFeign.actualizarLibro(libro.getId(), libro);
+
         prestamoGuardado.setLibro(libro);
         prestamoGuardado.setUsuario(usuario);
 
         return prestamoGuardado;
     }
+
 
     @Override
     public Prestamo Actualizar(Prestamo prestamo) {
