@@ -14,5 +14,6 @@ public interface LibroServicio {
     Libro Guardar(Libro libro);
     Libro Modificar(Long id, Libro libro);
     void Eliminar(Long id);
+    List<Libro> BuscarVarios(List<Long> ids);
 
 }

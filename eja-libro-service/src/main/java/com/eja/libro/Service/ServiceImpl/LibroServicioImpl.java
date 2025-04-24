@@ -43,4 +43,9 @@ public class LibroServicioImpl implements LibroServicio {
     public void Eliminar(Long id) {
         libroRepositorio.deleteById(id);
     }
+
+    @Override
+    public List<Libro> BuscarVarios(List<Long> ids) {
+        return libroRepositorio.findAllById(ids);
+    }
 }

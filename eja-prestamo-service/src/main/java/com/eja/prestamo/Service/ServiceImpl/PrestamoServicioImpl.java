@@ -1,6 +1,8 @@
 package com.eja.prestamo.Service.ServiceImpl;
 
 
+import com.eja.prestamo.Dto.LibroDto;
+import com.eja.prestamo.Dto.UsuarioDto;
 import com.eja.prestamo.Entity.Prestamo;
 import com.eja.prestamo.Feign.LibroFeign;
 import com.eja.prestamo.Feign.UsuarioFeign;
@@ -50,9 +52,33 @@ public class PrestamoServicioImpl implements PrestamoServicio {
 
     @Override
     public Prestamo Guardar(Prestamo prestamo) {
+        // Obtener usuario desde el microservicio
+        UsuarioDto usuario = usuarioFeign.buscarUsuario(prestamo.getUsuarioId()).getBody();
+
+        if (usuario == null) {
+            throw new IllegalArgumentException("El usuario no existe.");
+        }
+
+        // Verificar si el usuario está activo
+        if (!"activo".equalsIgnoreCase(usuario.getEstado())) {
+            throw new IllegalStateException("El usuario no está activo y no puede registrar un préstamo.");
+        }
+
+        // Obtener libro y verificar copias disponibles (si no lo tienes ya)
+        LibroDto libro = libroFeign.buscarLibro(prestamo.getLibroId()).getBody();
+        if (libro == null) {
+            throw new IllegalArgumentException("El libro no existe.");
+        }
+
+        if (libro.getCopiasDisponibles() <= 0) {
+            throw new IllegalStateException("No hay copias disponibles para el libro solicitado.");
+        }
+
+        // Si pasa todas las validaciones, guardar el préstamo
         Prestamo prestamoGuardado = prestamoRepositorio.save(prestamo);
-        prestamoGuardado.setLibro(libroFeign.buscarLibro(prestamoGuardado.getLibroId()).getBody());
-        prestamoGuardado.setUsuario(usuarioFeign.buscarUsuario(prestamoGuardado.getUsuarioId()).getBody());
+        prestamoGuardado.setLibro(libro);
+        prestamoGuardado.setUsuario(usuario);
+
         return prestamoGuardado;
     }
 
