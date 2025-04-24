@@ -27,6 +27,9 @@ public class LibroServicioImpl implements LibroServicio {
 
     @Override
     public Libro Guardar(Libro libro) {
+        if (libroRepositorio.existsByIsbn(libro.getIsbn())) {
+            throw new RuntimeException("El ISBN ya está registrado para otro libro.");
+        }
         return libroRepositorio.save(libro);
     }
 

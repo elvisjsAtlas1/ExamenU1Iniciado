@@ -27,9 +27,11 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public Usuario Guardar(Usuario usuario) {
+        if (usuarioRepositorio.existsByCorreo(usuario.getCorreo())) {
+            throw new RuntimeException("El correo ya está en uso");
+        }
         return usuarioRepositorio.save(usuario);
     }
-
     @Override
     public Usuario Modificar(Long id, Usuario usuario) {
         usuario.setId(id);
