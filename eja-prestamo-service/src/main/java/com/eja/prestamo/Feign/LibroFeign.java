@@ -19,7 +19,7 @@ public interface LibroFeign {
     @CircuitBreaker(name = "libroListarPorIdCB", fallbackMethod = "fallbackLibroById")
     ResponseEntity<LibroDto> buscarLibro(@PathVariable Long id);
 
-    default ResponseEntity<LibroDto> fallbackProductoById(@PathVariable Integer id) {
+    default ResponseEntity<LibroDto> fallbackLibroById(@PathVariable Integer id) {
         LibroDto libroDto = new LibroDto();
         libroDto.setTitulo("Servicio de libro no disponible KR :C");
         return ResponseEntity.ok(libroDto);

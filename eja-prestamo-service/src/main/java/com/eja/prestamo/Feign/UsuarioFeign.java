@@ -14,8 +14,7 @@ public interface UsuarioFeign {
     @GetMapping("/{id}")
     @CircuitBreaker(name = "usuarioListarPorIdCB", fallbackMethod = "fallbackUsuarioById")
     ResponseEntity<UsuarioDto> buscarUsuario(@PathVariable Long id);
-
-    default ResponseEntity<UsuarioDto> fallbackProductoById(@PathVariable Integer id) {
+    default ResponseEntity<UsuarioDto> fallbackUsuarioById(@PathVariable Integer id) {
         UsuarioDto usuarioDto = new UsuarioDto();
         usuarioDto.setNombre("Servicio de usuario no disponible KR :C");
         return ResponseEntity.ok(usuarioDto);
