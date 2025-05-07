@@ -2,6 +2,7 @@ package com.eja.prestamo.Feign;
 
 
 import com.eja.prestamo.Dto.UsuarioDto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,5 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UsuarioFeign {
 
     @GetMapping("/{id}")
+    @CircuitBreaker(name = "usuarioListarPorIdCB", fallbackMethod = "fallbackUsuarioById")
     ResponseEntity<UsuarioDto> buscarUsuario(@PathVariable Long id);
+
+    default ResponseEntity<UsuarioDto> fallbackProductoById(@PathVariable Integer id) {
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setNombre("Servicio de usuario no disponible KR :C");
+        return ResponseEntity.ok(usuarioDto);
+    }
 }
