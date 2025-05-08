@@ -4,9 +4,12 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8090/eureka
+      #defaultZone: http://localhost:8090/eureka
+      defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
+
   instance:
-    hostname: localhost
+    #hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 spring:
   cloud:
@@ -18,11 +21,11 @@ spring:
         - id: eja-libro-service
           uri: lb://eja-libro-service
           predicates:
-            - Path=/libro/**
+            - Path=/libros/**
         - id: eja-usuario-service
           uri: lb://eja-usuario-service
           predicates:
-            - Path=/usuario/**
+            - Path=/usuarios/**
         - id: eja-prestamo-service
           uri: lb://eja-prestamo-service
           predicates:
