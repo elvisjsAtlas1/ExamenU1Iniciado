@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/prestamo")
+@RequestMapping("/prestamos")
 public class PrestamoControlador {
 
     @Autowired
