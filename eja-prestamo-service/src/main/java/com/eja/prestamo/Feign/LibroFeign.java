@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "eja-libro-service", path = "/libro")
+@FeignClient(name = "eja-libro-service", path = "/libros")
 public interface LibroFeign {
 
     @GetMapping("/{id}")
     @CircuitBreaker(name = "libroListarPorIdCB", fallbackMethod = "fallbackLibroById")
     ResponseEntity<LibroDto> buscarLibro(@PathVariable Long id);
 
-    default ResponseEntity<LibroDto> fallbackLibroById(@PathVariable Integer id, Exception ex) {
+    default ResponseEntity<LibroDto> fallbackLibroById(Integer id, Exception e) {
         LibroDto libroDto = new LibroDto();
         libroDto.setTitulo("Servicio de libro no disponible KR :C");
         return ResponseEntity.ok(libroDto);
     }
 
-    // Agregar el método PUT para actualizar el libro
+
     @PutMapping("/{id}")
     ResponseEntity<LibroDto> actualizarLibro(@PathVariable Long id, @RequestBody LibroDto libro);
 }
